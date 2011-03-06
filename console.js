@@ -632,7 +632,30 @@ var exec = document.getElementById('exec'),
         };
         body.appendChild(script);
         return 'Creating connection...';
-      }
+      },
+      // manage browsersocket connection
+      createServer: function() {
+        if("BrowserSocket" in window) {
+          bs = new BrowserSocket(bsHandler);
+      
+          return "BrowserSocket started, connect to this address: " + 'ws://127.0.0.1:' + bs.port + bs.resourcePrefix;
+        } else {
+          return "Your browser doesn't support BrowserSockets";
+        }
+      },
+      killServer: function() {
+        if("BrowserSocket" in window) {
+          if(bsConnection) {
+            bsConnection.close();
+          }
+          if(bs) {
+            bs.stop();
+          }
+          return "Server instance and connection killed";
+        } else {
+          return "Your browser doesn't support BrowserSockets";
+        }
+    }
     },
     // I hate that I'm browser sniffing, but there's issues with Firefox and execCommand so code completion won't work
     iOSMobile = navigator.userAgent.indexOf('AppleWebKit') !== -1 && navigator.userAgent.indexOf('Mobile') !== -1,

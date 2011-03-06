@@ -19,6 +19,7 @@ body { overflow: auto; }
 #console { bottom: 35px; left: 0; right: 0; width: 100%; margin-bottom: 35px; overflow: auto; /*border-bottom: 1px solid #5B5C5B;*/ }
 
 #output { font-family: monospace; list-style: none; }
+#console:focus { outline: none; }
 #output li { margin: 5px 0; padding: 5px; border-top: 1px solid #EEEFEE; white-space: pre-wrap; }
 #output li:last-child { border-bottom: 0;}
 #output > li > div { margin-left: 20px; line-height: 20px; }
