@@ -7,6 +7,7 @@ Also available as a [native iOS app](http://jsconsole.com/app/) from the iTunes 
 # Features
 
 - Remote device debugging using "listen" command ([more info](http://jsconsole.com/remote-debugging.html))
+	- I've added my solution see my [screencast](http://screenr.com/uSJ) for a quick rundown, will add more info soon.
 - Resizable font (yep, biggest issue with Firebug in workshops)
 - Autocomplete in WebKit desktop browsers
 - shift + up/down for bigger console
