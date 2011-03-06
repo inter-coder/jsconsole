@@ -258,16 +258,20 @@ function loadScript() {
   var doc = sandboxframe.contentDocument || sandboxframe.contentWindow.document;
   for (var i = 0; i < arguments.length; i++) {
     (function (url) {
-      var script = document.createElement('script');
-      script.src = url
-      script.onload = function () {
-        window.top.info('Loaded ' + url, 'http://' + window.location.hostname);
-        if (url == libraries.coffeescript) window.top.info('Now you can type CoffeeScript instead of plain old JS!');
-      };
-      script.onerror = function () {
-        log('Failed to load ' + url, 'error');
-      }
-      doc.body.appendChild(script);
+      if(!bsConnection) {
+        var script = document.createElement('script');
+        script.src = url
+        script.onload = function () {
+          window.top.info('Loaded ' + url, 'http://' + window.location.hostname);
+          if (url == libraries.coffeescript) window.top.info('Now you can type CoffeeScript instead of plain old JS!');
+        };
+        script.onerror = function () {
+          log('Failed to load ' + url, 'error');
+        }
+        doc.body.appendChild(script);
+    } else { // If we're remote debugging load the script on the client instead
+      bsConnection.send("loadScript('"+url+"')");
+    }
     })(libraries[arguments[i]] || arguments[i]);
   }
   return "Loading script...";
@@ -535,6 +539,39 @@ function about() {
   return 'Built by <a target="_new" href="http://twitter.com/rem">@rem</a>';
 }
 
+// Browser Socket remote debugging.
+var bs, bsConnection, bsRun;
+function bsHandler(handshakeRequest) {
+  return new function() {
+    bsConnection = this;
+        
+    bsConnection.onmessage = function(msg) {
+      var data = msg.data.split("::");
+      
+      echo(data[0]);
+      log(stringify(data[1], true));
+    }
+    bsConnection.onopen = function() {
+      bsRun = run;
+      
+      // Override the run command while there is an active connection
+      run = function(cmd) {
+        
+        var internalCmd = internalCommand(cmd);
+        
+        if(internalCmd) {
+          return ['info', internalCmd]; 
+        } else {
+          bsConnection.send(cmd);
+        }
+      };
+    }
+    bsConnection.onclose = function(e) {
+      run = bsRun;
+      window.info("Browser socket connection has closed");
+    }
+  }
+}
 
 document.addEventListener ? 
   window.addEventListener('message', function (event) {
