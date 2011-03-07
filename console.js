@@ -222,6 +222,8 @@ function showhelp() {
     ':load &lt;script_url&gt; - to inject external library',
     '      load also supports following shortcuts: <br />      jquery, underscore, prototype, mootools, dojo, rightjs, coffeescript, yui.<br />      eg. :load jquery',
     ':listen [id] - to start <a href="/remote-debugging.html">remote debugging</a> session',
+	':createServer - to start a socket server instance a client can connect to using the WebSocket API, use <a href="javascript:(function(doc) {var script=document.createElement(\'script\');script.src = \'http://labs.thecssninja.com/jsconsole/client.js\';doc.body.appendChild(script);})(this.document);">bookmarklet</a> to connect client.',
+	':killServer - destroys BrowserSocket instance and kills any active connections',
     ':clear - to clear the history (accessed using cursor keys)',
     ':about',
     '',
